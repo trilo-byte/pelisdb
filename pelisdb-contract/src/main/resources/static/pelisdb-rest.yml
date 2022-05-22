@@ -1,0 +1,484 @@
+openapi: 3.0.1
+info:
+  title: PelisDb API
+  description: API to be consumed as part of a challenge
+  version: 1.0.0
+  contact:
+    name: Antonio Otero Andria
+    email: a.otero.andria@gmail.com
+tags:
+  - name: PelisDb
+paths:
+  '/movies/{id}':
+    parameters:
+      - schema:
+          type: integer
+          format: int64
+          example: 1
+        name: id
+        in: path
+        required: true
+        description: The identifier of a movie
+    get:
+      tags:
+        - Movies
+      summary: Get a movie using the Id
+      description: It retrieves the movie by its ID from database
+      operationId: getMovie
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    title: Me, myselsf and Irene
+                    year: 2000
+                    genre: Comedy
+                    actors:
+                      - id: 1
+                        name: Jim Carrey
+                      - id: 2
+                        name: Renee Zellweger
+                    poster: http://www.freepic.com/anyMovie.jpg
+                    languages:
+                      - English
+                      - Spanish
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Movies
+      summary: Update a Movie
+      description: The response returns the movieId
+      operationId: updateMovie
+      requestBody:
+        description: The body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieReq'
+            examples:
+              example-1:
+                value:
+                  title: Me, myself and Irene
+                  year: 2000
+                  genre: Comedy
+                  actors:
+                    - id: 1
+                      name: Jim Carrey
+                    - id: 2
+                      name: Renee Zellweger
+                  poster: http://www.freepic.com/anyMovie.jpg
+                  languages:
+                    - English
+                    - Spanish
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    title: Me, myself and Irene
+                    year: 2000
+                    genre: Comedy
+                    actors:
+                      - id: 1
+                        name: Jim Carrey
+                      - id: 2
+                        name: Renee Zellweger
+                    Poster: http://www.freepic.com/anyMovie.jpg
+                    Languages:
+                      - English
+                      - Spanish
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - Movies
+      summary: Removes a movie by its Id
+      description: deletes a movie
+      operationId: deleteMovie
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+  /movies:
+    get:
+      tags:
+        - Movies
+      summary: Get a movie using the title
+      description: It retrieves the movie/s if the title is part of their titles
+      operationId: getMovieByTitle
+      parameters:
+        - schema:
+            type: string
+            example: Irene
+          in: query
+          name: title
+          description: The title of a movie
+        - schema:
+            type: integer
+            example: 0
+          in: query
+          name: page
+          description: The page number to be shown
+          required: true
+        - schema:
+            type: integer
+            example: 3
+          in: query
+          name: size
+          description: Number of results per page
+          required: true
+        - schema:
+            type: string
+            example: title
+          in: query
+          name: sort1
+          description: First sorting criteria
+        - schema:
+            type: string
+            example: year
+          in: query
+          name: sort2
+          description: Second sorting criteria
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieRes'
+              examples:
+                example-1:
+                  value:
+                    currentPage: 0
+                    totalItems: 10
+                    totalPages: 2
+                    movies:
+                      - id: 1
+                        title: Me, myselsf and Irene
+                        year: 2000
+                        genre: Comedy
+                        actors:
+                          - id: 1
+                            name: Jim Carrey
+                          - id: 2
+                            name: Renee Zellweger
+                        poster: http://www.freepic.com/anyMovie.jpg
+                        languages:
+                          - English
+                          - Spanish
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Movies
+      summary: Adds a Movie
+      description: The response returns the movie identifier
+      operationId: addMovie
+      requestBody:
+        description: The body with the movie info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieReq'
+            examples:
+              example-1:
+                value:
+                  title: Me, myself and Irene
+                  year: 2000
+                  genre: Comedy
+                  actors:
+                    - id: 1
+                      name: Jim Carrey
+                    - id: 2
+                      name: Renee Zellweger
+                  poster: https://www.freepic.com/anyMovie.jpg
+                  languages:
+                    - English
+                    - Spanish
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+              examples: {}
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: UUID of this error
+          format: uuid
+          example: 4c3a5767-4973-44b0-a9c2-b8cf1b34373a
+          readOnly: true
+        method:
+          type: string
+          example: GET
+          description: HTTP method with which this request was made
+          readOnly: true
+        path:
+          type: string
+          format: uri-reference
+          example: /movies
+          description: Path of this request
+          readOnly: true
+        status:
+          type: integer
+          example: 500
+          format: int32
+          description: Https status code
+          readOnly: true
+        description:
+          type: string
+          example: 'An error occurred when updating a movie. Please try again later, and if the problem persists, contact the customer services department'
+          description: Message with the error explained
+      required:
+        - uuid
+        - status
+        - description
+    MovieReq:
+      type: object
+      description: A movie data
+      properties:
+        title:
+          type: string
+          description: The title of the movie
+          example: Me, myself and Irene
+          minLength: 1
+        year:
+          type: integer
+          example: 1973
+        genre:
+          $ref: '#/components/schemas/Genre'
+        actors:
+          type: array
+          description: A list of actors that play in the movie
+          minItems: 1
+          example:
+            - id: 1
+              name: Jim Carrey
+            - id: 2
+              name: Renee Zellweger
+          items:
+            $ref: '#/components/schemas/Actor'
+            minLength: 1
+        poster:
+          type: string
+          description: The URL to the movie poster
+          example: http://www.freepic.com/anyposter.jpg
+        languages:
+          type: array
+          description: A list of available languages of the movie
+          minItems: 1
+          example:
+            - English
+            - Spanish
+          items:
+            $ref: '#/components/schemas/Language'
+      required:
+        - title
+        - year
+        - genre
+        - actors
+        - languages
+    Movie:
+      description: A movie data
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              description: The id of the movie
+              example: 1
+              readOnly: true
+          required:
+            - id
+        - $ref: '#/components/schemas/MovieReq'
+    Genre:
+      type: string
+      enum:
+        - Comedy
+        - Terror
+        - Action
+        - Romantic
+        - Other
+      example: Comedy
+      description: The name of the genre of the movie belogs to
+    Actor:
+      description: An actor
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The id of the actor
+          example: 1
+          readOnly: true
+        name:
+          type: string
+          description: Name of the actor
+          example: Jim Carrey
+      required:
+        - id
+        - name
+    Language:
+      type: string
+      enum:
+        - English
+        - Spanish
+        - Italian
+        - French
+        - Other
+      example: English
+      description: The possible language of a movie
+    MovieRes:
+      type: object
+      description: The result of retrieving a list of movies
+      properties:
+        movies:
+          type: array
+          description: The result list of search for movies
+          items:
+            $ref: '#/components/schemas/Movie'
+        currentPage:
+          type: integer
+          description: the current displayed results page
+          example: 1
+        totalItems:
+          type: integer
+          format: int64
+          description: the number of movies that match the search criteria
+          example: 10
+        totalPages:
+          type: integer
+          description: The number of result pages
+          example: 3
+  parameters: {}
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  responses:
+    '400':
+      description: 'Bad Request, Movie ID invalid or JSON body error.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            example-1:
+              value:
+                uuid: 4c3a5767-4973-44b0-a9c2-b8cf1b34373a
+                method: POST
+                path: /movies
+                status: 400
+                description: 'genre: cannot be null'
+    '401':
+      description: Authorization information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            example-1:
+              value:
+                uuid: 4c3a5767-4973-44b0-a9c2-b8cf1b34373a
+                method: GET
+                path: /movies
+                status: 401
+                description: Unauthorized
+    '403':
+      description: User permissions is not enough.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            example-1:
+              value:
+                uuid: 4c3a5767-4973-44b0-a9c2-b8cf1b34373a
+                method: GET
+                path: /movies
+                status: 403
+                description: Forbidden
+    '404':
+      description: A movie with the specified ID was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            example-1:
+              value:
+                uuid: 4c3a5767-4973-44b0-a9c2-b8cf1b34373a
+                method: GET
+                path: /movies/8888
+                status: 404
+                description: Id not found
+    '500':
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+security:
+  - basicAuth: []
+servers:
+  - url: 'http://localhost:8080'
+    description: Local
