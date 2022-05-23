@@ -1,6 +1,6 @@
 # PelisDB
 
-A small API for managing movies as part as a challenge for RedPonit. It takes advantage of spring boot for rapid development.
+A small API for managing movies as part as a challenge for RedPoints. It takes advantage of spring boot for rapid development.
 
 ##  🚀 Getting started
 
